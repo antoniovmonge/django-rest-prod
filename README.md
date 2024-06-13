@@ -1,49 +1,60 @@
-# Django REST prod
+# Django REST (Caching, Logging, and Throttling)
 
-Django REST advanced topics
+This is a Django REST project used to apply caching, logging, and throttling aiming to follow best practices for production-ready applications.
 
-[![Built with Cookiecutter Django](https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg?logo=cookiecutter)](https://github.com/cookiecutter/cookiecutter-django/)
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 License: MIT
 
-## Settings
+## Estructure
 
-Moved to [settings](http://cookiecutter-django.readthedocs.io/en/latest/settings.html).
+The project follows the Django-Cookiecutter structure, with some modifications and additions to bring a better developer experience.
+
+## Stack
+
+- Django
+- Django REST Framework
+- Celery
+- Redis
+- PostgreSQL
+- Docker
+- Docker Compose
+
+## Env Files
+
+Environment variables for local development are included to enable easy setup for local development.
+
+For production environments, a secret `.env` file must be created and keep it safe.
 
 ## Basic Commands
 
-### Setting Up Your Users
+A Makefile is provided with the most common commands to run the project. This Makefile also serve as a kind of documentation for the project.
 
-- To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
+### Setup
 
-- To create a **superuser account**, use this command:
+To build the image and start the containers, run:
 
-      $ python manage.py createsuperuser
+```bash
+make up-build
+```
 
-For convenience, you can keep your normal user logged in on Chrome and your superuser logged in on Firefox (or similar), so that you can see how the site behaves for both kinds of users.
+### Create Superuser and Test User in Development Environment
 
-### Type checks
+```bash
+make users
+```
 
-Running type checks with mypy:
-
-    $ mypy core
-
-### Test coverage
+### Test  tests with pytest and coverage
 
 To run the tests, check your test coverage, and generate an HTML coverage report:
 
-    $ coverage run -m pytest
-    $ coverage html
-    $ open htmlcov/index.html
+```bash
+make test
+```
 
-#### Running tests with pytest
-
-    $ pytest
-
-### Live reloading and Sass CSS compilation
-
-Moved to [Live reloading and SASS compilation](https://cookiecutter-django.readthedocs.io/en/latest/developing-locally.html#sass-compilation-live-reloading).
+```bash
+make coverage
+```
 
 ### Celery
 
@@ -72,26 +83,10 @@ cd core
 celery -A config.celery_app worker -B -l info
 ```
 
-### Email Server
+### Email Server in DEVELOPMENT
 
-In development, it is often nice to be able to see emails that are being sent from your application. For that reason local SMTP server [Mailpit](https://github.com/axllent/mailpit) with a web interface is available as docker container.
+Mailpit allow us to test the email sending in development environment without sending real emails.
 
-Container mailpit will start automatically when you will run all docker containers.
-Please check [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html) for more details how to start all containers.
+Container mailpit will start automatically when you will run all docker containers in development.
 
 With Mailpit running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
-
-### Sentry
-
-Sentry is an error logging aggregator service. You can sign up for a free account at <https://sentry.io/signup/?code=cookiecutter> or download and host it yourself.
-The system is set up with reasonable defaults, including 404 logging and integration with the WSGI application.
-
-You must set the DSN url in production.
-
-## Deployment
-
-The following details how to deploy this application.
-
-### Docker
-
-See detailed [cookiecutter-django Docker documentation](http://cookiecutter-django.readthedocs.io/en/latest/deployment-with-docker.html).

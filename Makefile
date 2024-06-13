@@ -30,6 +30,9 @@ collectstatic:
 test:
 	docker-compose -f docker-compose.local.yml run --rm django coverage run -m pytest
 
+coverage:
+	docker-compose -f docker-compose.local.yml run --rm django coverage html
+
 shell:
 	$(MANAGE) shell
 
