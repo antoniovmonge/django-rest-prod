@@ -4,11 +4,15 @@ This is a Django REST project used to apply caching, logging, and throttling aim
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
+![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
+
 License: MIT
 
 ## Estructure
 
 The project follows the Django-Cookiecutter structure, with some modifications and additions to bring a better developer experience.
+
+The directories `contrib`, `static`, `templates` and the different apps are located inside the `core` directory.
 
 ## Stack
 
@@ -19,6 +23,7 @@ The project follows the Django-Cookiecutter structure, with some modifications a
 - PostgreSQL
 - Docker
 - Docker Compose
+- Pre-commit (Code Quality must be checked before commit)
 
 ## Env Files
 
