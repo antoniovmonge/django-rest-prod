@@ -14,6 +14,10 @@ The project follows the Django-Cookiecutter structure, with some modifications a
 
 The directories `contrib`, `static`, `templates` and the different apps are located inside the `core` directory.
 
+## Project Description
+
+This project is focused on implementing **Caching**, **Logging** and **Throttling** but those advanced topics are build over the classic API with Blogs and Authors.
+
 ## Stack
 
 - Django
@@ -31,19 +35,23 @@ Environment variables for local development are included to enable easy setup fo
 
 For production environments, a secret `.env` file must be created and keep it safe.
 
-## Basic Commands
+## Makefile
 
-A Makefile is provided with the most common commands to run the project. This Makefile also serve as a kind of documentation for the project.
+A Makefile is provided with the most common commands to run the project.
 
 ### Setup
 
-To build the image and start the containers, run:
+Build the image and start the containers (not detach mode, to see the logs in the terminal):
 
 ```bash
 make up-build
 ```
 
 ### Create Superuser and Test User in Development Environment
+
+In a separate terminal, run the following command to create a `superuser` and a `test user` (Only works in development environment). The email and passwords can be found in the `core/users/management/commands/create_local_user_and_admin.py` file.
+
+⚠️ To access to the API <http://127.0.0.1:8000/api/> the `admin` credentials must be provided.
 
 ```bash
 make users
