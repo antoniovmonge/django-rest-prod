@@ -1,12 +1,12 @@
 # Django REST (Caching, Logging, and Throttling)
 
-This is a Django REST project used to apply caching, logging, and throttling aiming to follow best practices for production-ready applications.
-
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
 ![Black](https://img.shields.io/badge/code%20style-black-000000.svg)
 
-License: MIT
+This is an early-stage **Django REST framework** project used to apply `caching`, `logging`, and `throttling`. It aims to follow best practices for secure-production-ready applications.
+
+🚧 Work in progress.
 
 ## Estructure
 
@@ -39,7 +39,7 @@ For production environments, a secret `.env` file must be created and keep it sa
 
 A Makefile is provided with the most common commands to run the project.
 
-### Setup
+### 1. Setup
 
 Build the image and start the containers (not detach mode, to see the logs in the terminal):
 
@@ -47,7 +47,7 @@ Build the image and start the containers (not detach mode, to see the logs in th
 make up-build
 ```
 
-### Create Superuser and Test User in Development Environment
+### 2. Create Superuser and Test User in Development Environment
 
 In a separate terminal, run the following command to create a `superuser` and a `test user` (Only works in development environment). The email and passwords can be found in the `core/users/management/commands/create_local_user_and_admin.py` file.
 
@@ -57,7 +57,26 @@ In a separate terminal, run the following command to create a `superuser` and a 
 make users
 ```
 
-### Test  tests with pytest and coverage
+### 3. Populate the Database with Dummy Data
+
+```bash
+make dummy-data
+```
+
+### 4. The API
+
+Once logged in as an admin, it is possible to access it at <http://127.0.0.1:8000/api/>.
+There it is possible to see the available endpoints and test them.
+
+```json
+{
+    "users": "http://127.0.0.1:8000/api/users/",
+    "blogs": "http://127.0.0.1:8000/api/blogs/",
+    "authors": "http://127.0.0.1:8000/api/authors/"
+}
+```
+
+### Test tests with pytest and coverage
 
 To run the tests, check your test coverage, and generate an HTML coverage report:
 
@@ -69,7 +88,7 @@ make test
 make coverage
 ```
 
-### Email Server in DEVELOPMENT
+## 📧 Email Server in DEVELOPMENT
 
 Mailpit allow us to test the email sending in development environment without sending real emails.
 
