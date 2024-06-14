@@ -1,6 +1,6 @@
 from django.urls import path
 
-from core.blogs import views
+from core.blogs.api import views
 
 urlpatterns = [
     path("find-by-author/", views.get_blogs_by_author),
