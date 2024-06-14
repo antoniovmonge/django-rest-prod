@@ -84,3 +84,4 @@ class Blog3ApiView(APIView):
 
 class BlogViewSet(viewsets.ModelViewSet):
     queryset = Blog.objects.all()
+    serializer_class = BlogSerializer
