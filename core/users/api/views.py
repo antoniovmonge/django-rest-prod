@@ -8,9 +8,11 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework.mixins import UpdateModelMixin
 from rest_framework.response import Response
 from rest_framework.viewsets import GenericViewSet
+from rest_framework_simplejwt.views import TokenObtainPairView
 
 from core.users.models import User
 
+from .serializers import LogInSerializer
 from .serializers import UserSerializer
 
 
@@ -33,3 +35,17 @@ class SignUpView(generics.CreateAPIView):
     queryset = get_user_model().objects.all()
     serializer_class = UserSerializer
     permission_classes = [permissions.AllowAny]  # allow non-authenticated users
+
+
+class LogInView(TokenObtainPairView):
+    serializer_class = LogInSerializer
+    permission_classes = [permissions.AllowAny]  # allow non-authenticated users
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(
+            data=request.data,
+            context={"request": request},
+        )
+
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)

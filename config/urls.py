@@ -9,8 +9,9 @@ from django.views.generic import TemplateView
 from drf_spectacular.views import SpectacularAPIView
 from drf_spectacular.views import SpectacularSwaggerView
 from rest_framework.authtoken.views import obtain_auth_token
+from rest_framework_simplejwt.views import TokenRefreshView
 
-from core.users.api.views import SignUpView
+from core.users.api.views import SignUpView, LogInView
 
 urlpatterns = [
     path("", TemplateView.as_view(template_name="pages/home.html"), name="home"),
@@ -42,7 +43,9 @@ urlpatterns += [
         SpectacularSwaggerView.as_view(url_name="api-schema"),
         name="api-docs",
     ),
-    path("api/signup/", SignUpView.as_view(), name="signup"),
+    path("api/signup/", SignUpView.as_view(), name="api-signup"),
+    path("api/log-in/", LogInView.as_view(), name="api-log-in"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
 ]
 
 if settings.DEBUG:
