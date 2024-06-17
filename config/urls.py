@@ -46,6 +46,13 @@ urlpatterns += [
     path("api/signup/", SignUpView.as_view(), name="api-signup"),
     path("api/log-in/", LogInView.as_view(), name="api-log-in"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    path(
+        "api/trip/",
+        include(
+            "core.trips.api.urls",
+            "trip",
+        ),
+    ),
 ]
 
 if settings.DEBUG:
