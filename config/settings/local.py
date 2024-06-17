@@ -28,6 +28,18 @@ CACHES = {
 
 CACHEOPS_REDIS = env("REDIS_URL", default="redis://redis:6379/0")
 
+# CHANNELS
+REDIS_URL = env("REDIS_URL", default="redis://localhost:6379")
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [REDIS_URL],
+        },
+    },
+}
+
 # EMAIL
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#email-host
