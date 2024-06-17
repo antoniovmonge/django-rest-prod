@@ -1,6 +1,9 @@
 import pytest
+from channels.db import database_sync_to_async
 from channels.layers import get_channel_layer
 from channels.testing import WebsocketCommunicator
+from django.contrib.auth import get_user_model
+from rest_framework_simplejwt.tokens import AccessToken
 
 from config.asgi import application
 
@@ -11,18 +14,34 @@ TEST_CHANNEL_LAYERS = {
 }
 
 
+@database_sync_to_async
+def create_user(email, password):
+    user = get_user_model().objects.create_user(email=email, password=password)
+    access = AccessToken.for_user(user)
+    return user, access
+
+
 @pytest.mark.asyncio()
+@pytest.mark.django_db(transaction=True)
 class TestWebSocket:
     async def test_can_connect_to_server(self, settings):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
-        communicator = WebsocketCommunicator(application=application, path="/taxi/")
+        _, access = await create_user("test.user@email.com", "testpass123")
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
         connected, _ = await communicator.connect()
         assert connected is True
         await communicator.disconnect()
 
     async def test_can_send_and_receive_messages(self, settings):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
-        communicator = WebsocketCommunicator(application=application, path="/taxi/")
+        _, access = await create_user("test.user@email.com", "testpass123")
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
         await communicator.connect()
         message = {
             "type": "echo.message",
@@ -35,7 +54,11 @@ class TestWebSocket:
 
     async def test_can_send_and_receive_broadcast_messages(self, settings):
         settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
-        communicator = WebsocketCommunicator(application=application, path="/taxi/")
+        _, access = await create_user("test.user@email.com", "testpass123")
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
         await communicator.connect()
         message = {
             "type": "echo.message",
@@ -45,4 +68,11 @@ class TestWebSocket:
         await channel_layer.group_send("test", message=message)
         response = await communicator.receive_json_from()
         assert response == message
+        await communicator.disconnect()
+
+    async def test_cannot_connect_to_socket(self, settings):
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+        communicator = WebsocketCommunicator(application=application, path="/taxi/")
+        connected, _ = await communicator.connect()
+        assert connected is False
         await communicator.disconnect()

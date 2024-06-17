@@ -9,15 +9,18 @@ os.environ.setdefault("DJANGO_SETTINGS_MODULE", "taxi.settings")
 
 django_asgi_application = get_asgi_application()
 
+from config.middleware import token_auth_middleware_stack  # noqa: E402
 from core.trips.consumers import TaxiConsumer  # noqa: E402
 
 application = ProtocolTypeRouter(
     {
         "http": django_asgi_application,
-        "websocket": URLRouter(
-            [
-                path("taxi/", TaxiConsumer.as_asgi()),
-            ],
+        "websocket": token_auth_middleware_stack(  # changed
+            URLRouter(
+                [
+                    path("taxi/", TaxiConsumer.as_asgi()),
+                ],
+            ),
         ),
     },
 )
