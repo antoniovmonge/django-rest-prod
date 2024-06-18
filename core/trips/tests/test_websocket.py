@@ -96,6 +96,7 @@ class TestWebSocket:
         assert response == message
         await communicator.disconnect()
 
+    # Patch Solution to error with exception=KeyError('SERVER_NAME')
     @patch("django.http.request.HttpRequest.get_host")
     async def test_request_trip(self, mock_get_host, settings):
         mock_get_host.return_value = "testserver"
@@ -124,4 +125,46 @@ class TestWebSocket:
         assert response_data["status"] == "REQUESTED"
         assert response_data["rider"]["email"] == user.email
         assert response_data["driver"] is None
+        await communicator.disconnect()
+
+    @patch("django.http.request.HttpRequest.get_host")
+    async def test_driver_alerted_on_request(self, mock_get_host, settings):
+        mock_get_host.return_value = "testserver"
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+
+        # Listen to the 'drivers' group test channel.
+        channel_layer = get_channel_layer()
+        await channel_layer.group_add(group="drivers", channel="test_channel")
+
+        user, access = await create_user(
+            "test.rider@email.com",
+            "testpass123",
+            "rider",
+        )
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
+        await communicator.connect()
+
+        # Request a trip.
+        await communicator.send_json_to(
+            {
+                "type": "create.trip",
+                "data": {
+                    "pick_up_address": "Calle Real 123",
+                    "drop_off_address": "Avenida de la Luz 456",
+                    "rider": user.id,
+                },
+            },
+        )
+
+        # Receive JSON message from server on test channel.
+        response = await channel_layer.receive("test_channel")
+        response_data = response.get("data")
+
+        assert response_data["id"] is not None
+        assert response_data["rider"]["email"] == user.email
+        assert response_data["driver"] is None
+
         await communicator.disconnect()
