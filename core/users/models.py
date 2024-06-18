@@ -28,6 +28,11 @@ class User(AbstractUser):
 
     objects: ClassVar[UserManager] = UserManager()
 
+    @property
+    def group(self):
+        groups = self.groups.all()
+        return groups[0].name if groups else None
+
     def get_absolute_url(self) -> str:
         """Get URL for user's detail view.
 
