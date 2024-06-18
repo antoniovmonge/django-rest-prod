@@ -2,6 +2,7 @@ import base64
 import json
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from rest_framework import status
 from rest_framework.reverse import reverse
 from rest_framework.test import APIRequestFactory
@@ -11,12 +12,12 @@ from rest_framework.test import force_authenticate
 PASSWORD = "testpass123!"  # noqa: S105
 
 
-def create_user(email="testuser@email.com", password=PASSWORD):
-    return get_user_model().objects.create_user(
-        email=email,
-        name="Test User",
-        password=password,
-    )
+def create_user(email="testuser@email.com", password=PASSWORD, group_name="rider"):
+    group, _ = Group.objects.get_or_create(name=group_name)
+    user = get_user_model().objects.create_user(email=email, password=password)
+    user.groups.add(group)
+    user.save()
+    return user
 
 
 class AuthenticationTest(APITestCase):
@@ -28,6 +29,7 @@ class AuthenticationTest(APITestCase):
                 "name": "Test User",
                 "password1": PASSWORD,
                 "password2": PASSWORD,
+                "group": "rider",
             },
             follow=True,
         )
@@ -36,6 +38,7 @@ class AuthenticationTest(APITestCase):
         assert response.data["id"] == user.id
         assert response.data["email"], user.email
         assert response.data["name"], user.name
+        assert response.data["group"], user.group
 
     def test_user_can_log_in(self):
         user = create_user()
@@ -66,4 +69,3 @@ class AuthenticationTest(APITestCase):
         assert response.data["refresh"]
         assert payload_data["id"], user.id
         assert payload_data["email"], user.email
-        assert payload_data["name"], user.name

@@ -33,4 +33,5 @@ class TestUserViewSet:
             "name": user.name,
             "id": user.pk,
             "email": user.email,
+            "group": user.group,
         }
