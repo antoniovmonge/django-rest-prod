@@ -3,7 +3,6 @@ from django.contrib import admin
 from .models import Trip
 
 
-# new
 @admin.register(Trip)
 class TripAdmin(admin.ModelAdmin):
     fields = (
@@ -11,6 +10,8 @@ class TripAdmin(admin.ModelAdmin):
         "pick_up_address",
         "drop_off_address",
         "status",
+        "driver",
+        "rider",
         "created",
         "updated",
     )
@@ -19,6 +20,8 @@ class TripAdmin(admin.ModelAdmin):
         "pick_up_address",
         "drop_off_address",
         "status",
+        "driver",
+        "rider",
         "created",
         "updated",
     )

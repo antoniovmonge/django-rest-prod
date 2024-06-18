@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
 from core.trips.models import Trip
+from core.users.api.serializers import UserSerializer
 
 
 class TripSerializer(serializers.ModelSerializer):
@@ -12,3 +13,13 @@ class TripSerializer(serializers.ModelSerializer):
             "created",
             "updated",
         )
+
+
+class NestedTripSerializer(serializers.ModelSerializer):
+    driver = UserSerializer()
+    rider = UserSerializer()
+
+    class Meta:
+        model = Trip
+        fields = "__all__"
+        depth = 1
