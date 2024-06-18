@@ -72,9 +72,6 @@ flush:
 users:
 	$(MANAGE) create_local_user_and_admin
 
-dummy-data:
-	docker compose -f docker-compose.local.yml run --rm django bash -c "python manage.py shell < helper/create_dummy_data.py"
-
 # Production
 prod-build:
 	docker compose -f docker-compose.production.yml build

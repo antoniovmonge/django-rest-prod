@@ -259,3 +259,53 @@ class TestWebSocket:
         assert response == message
 
         await communicator.disconnect()
+
+    @patch("django.http.request.HttpRequest.get_host")
+    async def test_driver_can_update_trip(self, mock_get_host, settings):
+        mock_get_host.return_value = "testserver"
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+
+        # Create trip request.
+        rider, _ = await create_user(
+            "test.rider@email.com",
+            "testpass123",
+            "rider",
+        )
+        trip = await create_trip(rider=rider)
+        trip_id = f"{trip.id}"
+
+        # Listen for messages as rider.
+        channel_layer = get_channel_layer()
+        await channel_layer.group_add(group=trip_id, channel="test_channel")
+
+        # Update trip.
+        driver, access = await create_user(
+            "test.driver@email.com",
+            "testpass123",
+            "driver",
+        )
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
+        await communicator.connect()
+        message = {
+            "type": "update.trip",
+            "data": {
+                "id": trip_id,
+                "pick_up_address": trip.pick_up_address,
+                "drop_off_address": trip.drop_off_address,
+                "status": Trip.IN_PROGRESS,
+                "driver": driver.id,
+            },
+        }
+        await communicator.send_json_to(message)
+
+        # Rider receives message.
+        response = await channel_layer.receive("test_channel")
+        response_data = response.get("data")
+        assert response_data["id"] == trip_id
+        assert response_data["rider"]["email"] == rider.email
+        assert response_data["driver"]["email"] == driver.email
+
+        await communicator.disconnect()
