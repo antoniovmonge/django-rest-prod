@@ -309,3 +309,33 @@ class TestWebSocket:
         assert response_data["driver"]["email"] == driver.email
 
         await communicator.disconnect()
+
+    @patch("django.http.request.HttpRequest.get_host")
+    async def test_driver_join_trip_group_on_connect(self, mock_get_host, settings):
+        mock_get_host.return_value = "testserver"
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+        user, access = await create_user(
+            "test.driver@example.com",
+            "testpass123",
+            "driver",
+        )
+        trip = await create_trip(driver=user)
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
+        await communicator.connect()
+
+        # Send a message to the trip group.
+        message = {
+            "type": "echo.message",
+            "data": "This is a test message.",
+        }
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(f"{trip.id}", message=message)
+
+        # Rider receives message.
+        response = await communicator.receive_json_from()
+        assert response == message
+
+        await communicator.disconnect()

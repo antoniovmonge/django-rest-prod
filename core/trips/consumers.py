@@ -145,7 +145,6 @@ class TaxiConsumer(AsyncJsonWebsocketConsumer):
 
         await self.send_json({"type": "echo.message", "data": trip_data})
 
-    # new
     @database_sync_to_async
     def _update_trip(self, data):
         instance = Trip.objects.get(id=data.get("id"))
