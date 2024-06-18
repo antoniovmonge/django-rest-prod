@@ -5,7 +5,7 @@ from rest_framework.test import APITestCase
 
 from core.trips.models import Trip
 
-PASSWORD = "pAssw0rd!"  # noqa: S105
+PASSWORD = "testpass123!"  # noqa: S105
 
 
 def create_user(email="testuser@email.com", password=PASSWORD):

@@ -8,7 +8,7 @@ from rest_framework.test import APIRequestFactory
 from rest_framework.test import APITestCase
 from rest_framework.test import force_authenticate
 
-PASSWORD = "pAssw0rd!"  # noqa: S105
+PASSWORD = "testpass123!"  # noqa: S105
 
 
 def create_user(email="testuser@email.com", password=PASSWORD):
