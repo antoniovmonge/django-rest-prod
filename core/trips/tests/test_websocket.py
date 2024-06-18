@@ -9,6 +9,7 @@ from django.contrib.auth.models import Group
 from rest_framework_simplejwt.tokens import AccessToken
 
 from config.asgi import application
+from core.trips.models import Trip
 
 TEST_CHANNEL_LAYERS = {
     "default": {
@@ -38,6 +39,23 @@ def create_user(
     access = AccessToken.for_user(user)
 
     return user, access
+
+
+@database_sync_to_async
+def create_trip(
+    pick_up_address="123 Main Street",
+    drop_off_address="456 Piney Road",
+    status="REQUESTED",
+    rider=None,
+    driver=None,
+):
+    return Trip.objects.create(
+        pick_up_address=pick_up_address,
+        drop_off_address=drop_off_address,
+        status=status,
+        rider=rider,
+        driver=driver,
+    )
 
 
 @pytest.mark.asyncio()
@@ -166,5 +184,78 @@ class TestWebSocket:
         assert response_data["id"] is not None
         assert response_data["rider"]["email"] == user.email
         assert response_data["driver"] is None
+
+        await communicator.disconnect()
+
+    @patch("django.http.request.HttpRequest.get_host")
+    async def test_create_trip_group(self, mock_get_host, settings):
+        mock_get_host.return_value = "testserver"
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+        user, access = await create_user(
+            "test.user@email.com",
+            "testpass123",
+            "rider",
+        )
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
+        await communicator.connect()
+
+        # Send a ride request.
+        await communicator.send_json_to(
+            {
+                "type": "create.trip",
+                "data": {
+                    "pick_up_address": "Calle Real 123",
+                    "drop_off_address": "Avenida de la Luz 456",
+                    "rider": user.id,
+                },
+            },
+        )
+        response = await communicator.receive_json_from()
+        response_data = response.get("data")
+
+        # Send a message to the trip group.
+        message = {
+            "type": "echo.message",
+            "data": "This is a test message.",
+        }
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(response_data["id"], message=message)
+
+        # Rider receives message.
+        response = await communicator.receive_json_from()
+        assert response == message
+
+        await communicator.disconnect()
+
+    @patch("django.http.request.HttpRequest.get_host")
+    async def test_join_trip_group_on_connect(self, mock_get_host, settings):
+        mock_get_host.return_value = "testserver"
+        settings.CHANNEL_LAYERS = TEST_CHANNEL_LAYERS
+        user, access = await create_user(
+            "test.rider@example.com",
+            "testpass123",
+            "rider",
+        )
+        trip = await create_trip(rider=user)
+        communicator = WebsocketCommunicator(
+            application=application,
+            path=f"/taxi/?token={access}",
+        )
+        await communicator.connect()
+
+        # Send a message to the trip group.
+        message = {
+            "type": "echo.message",
+            "data": "This is a test message.",
+        }
+        channel_layer = get_channel_layer()
+        await channel_layer.group_send(f"{trip.id}", message=message)
+
+        # Rider receives message.
+        response = await communicator.receive_json_from()
+        assert response == message
 
         await communicator.disconnect()
