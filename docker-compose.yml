@@ -2,6 +2,8 @@ volumes:
   core_local_postgres_data: {}
   core_local_postgres_data_backups: {}
   core_local_redis_data: {}
+  media: {}
+  static: {}
 
 services:
   django: &django
@@ -77,3 +79,31 @@ services:
     ports:
       - '5555:5555'
     command: /start-flower
+
+  taxi-client:
+    build:
+      context: ./client
+    command: npm install && ng serve --host 0.0.0.0
+    container_name: taxi-client
+    depends_on:
+      - django
+    environment:
+      - CHROME_BIN=chromium-browser
+    ports:
+      - 4201:4200
+    volumes:
+      - ./client:/usr/src/app
+
+  nginx:
+    build:
+      context: ./nginx
+    container_name: taxi-nginx
+    depends_on:
+      - django
+      - taxi-client
+    ports:
+      - 8080:80
+    restart: always
+    volumes:
+      - media:/usr/src/app/media
+      - static:/usr/src/app/static
