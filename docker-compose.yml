@@ -22,7 +22,7 @@ services:
       - ./server/.envs/.local/.django
       - ./server/.envs/.local/.postgres
     ports:
-      - '8000:8000'
+      - '8001:8000'
     command: /start
 
   postgres:
@@ -83,7 +83,7 @@ services:
   taxi-client:
     build:
       context: ./client
-    command: npm install && ng serve --host 0.0.0.0
+    command: ng serve --host 0.0.0.0
     container_name: taxi-client
     depends_on:
       - django
