@@ -1,14 +1,17 @@
-<div class="middle-center">
+<h1>Landing</h1>
+<a class="btn btn-primary" [routerLink]="['/log-in']">Log in</a>
+<a class="btn btn-primary" [routerLink]="['/sign-up']">Sign up</a>
+<!-- <div class="middle-center">
   <h1 class="landing logo">Taxi</h1>
   <div *ngIf="getUser(); then thenBlock; else elseBlock;"></div>
   <ng-template #thenBlock>
-  <a class="btn btn-primary"
-     routerLink
-     None="isRider() ? '/rider' : '/driver'">Dashboard</a>
-  <button class="btn btn-primary" (click)="logOut()">Log out</button>
+    <a class="btn btn-primary"
+      routerLink
+      None="isRider() ? '/rider' : '/driver'">Dashboard</a>
+    <button class="btn btn-primary" (click)="logOut()">Log out</button>
   </ng-template>
   <ng-template #elseBlock>
-  <a class="btn btn-primary" [routerLink]="['/log-in']">Log in</a>
-  <a class="btn btn-primary" [routerLink]="['/sign-up']">Sign up</a>
+    <a class="btn btn-primary" [routerLink]="['/log-in']">Log in</a>
+    <a class="btn btn-primary" [routerLink]="['/sign-up']">Sign up</a>
   </ng-template>
-</div>
+</div> -->
