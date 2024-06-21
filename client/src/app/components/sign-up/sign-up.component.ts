@@ -5,13 +5,12 @@ import { AuthService } from '../../services/auth.service';
 
 class UserData {
   constructor(
-    public username: string = '',
-    public firstName: string = '',
-    public lastName: string = '',
+    public email: string = '',
+    public name: string = '',
     public password: string = '',
     public group: string = '',
     public photo: any = '',
-  ) {}
+  ) { }
 }
 
 @Component({
@@ -25,7 +24,7 @@ export class SignUpComponent {
   constructor(
     private router: Router,
     private authService: AuthService
-  ) {}
+  ) { }
 
   onChange(event: any): void {
     if (event.target.files && event.target.files.length > 0) {
@@ -35,9 +34,8 @@ export class SignUpComponent {
 
   onSubmit(): void {
     this.authService.signUp(
-      this.user.username,
-      this.user.firstName,
-      this.user.lastName,
+      this.user.email,
+      this.user.name,
       this.user.password,
       this.user.group,
       this.user.photo

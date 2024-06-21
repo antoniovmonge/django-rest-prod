@@ -40,7 +40,7 @@ describe('LogInComponent', () => {
     const spy = spyOn(router, 'navigateByUrl');
     const user = createFakeUser();
     const token = createFakeToken(user);
-    component.user = { username: user.username, password: 'pAssw0rd!' };
+    component.user = { email: user.email, password: 'pAssw0rd!' };
     component.onSubmit();
     const request = httpMock.expectOne('/api/log_in/');
     request.flush(token);

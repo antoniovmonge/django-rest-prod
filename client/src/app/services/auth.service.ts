@@ -6,9 +6,8 @@ import { tap } from 'rxjs/operators';
 
 export interface User {
   readonly id: string;
-  readonly username: string;
-  readonly first_name: string;
-  readonly last_name: string;
+  readonly email: string;
+  readonly name: string;
   readonly group: string;
   readonly photo: string;
 }
@@ -22,10 +21,10 @@ export interface Token {
   providedIn: 'root'
 })
 export class AuthService {
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   private static parseUserFromAccessToken(accessToken: string): User {
-    const [, payload, ] = accessToken.split('.');
+    const [, payload,] = accessToken.split('.');
     const decoded = window.atob(payload);
     return JSON.parse(decoded);
   }
@@ -67,18 +66,16 @@ export class AuthService {
   }
 
   signUp(
-    username: string,
-    firstName: string,
-    lastName: string,
+    email: string,
+    name: string,
     password: string,
     group: string,
     photo: any
   ): Observable<User> {
     const url = '/api/sign_up/';
     const formData = new FormData();
-    formData.append('username', username);
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
+    formData.append('email', email);
+    formData.append('name', name);
     formData.append('password1', password);
     formData.append('password2', password);
     formData.append('group', group);
@@ -86,9 +83,9 @@ export class AuthService {
     return this.http.request<User>('POST', url, { body: formData });
   }
 
-  logIn(username: string, password: string): Observable<Token> {
+  logIn(email: string, password: string): Observable<Token> {
     const url = '/api/log_in/';
-    return this.http.post<Token>(url, { username, password }).pipe(
+    return this.http.post<Token>(url, { email, password }).pipe(
       tap(token => localStorage.setItem('taxi.auth', JSON.stringify(token)))
     );
   }

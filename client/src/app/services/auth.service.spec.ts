@@ -30,9 +30,8 @@ describe('Authentication using a service', () => {
 
     // Execute the function under test.
     authService.signUp(
-      userData.username,
-      userData.first_name,
-      userData.last_name,
+      userData.email,
+      userData.name,
       'pAssw0rd!',
       userData.group,
       photo
@@ -54,7 +53,7 @@ describe('Authentication using a service', () => {
 
     // Execute the function under test.
     authService.logIn(
-      userData.username, 'pAssw0rd!'
+      userData.email, 'pAssw0rd!'
     ).subscribe(user => {
       expect(user).toBe(tokenData);
     });

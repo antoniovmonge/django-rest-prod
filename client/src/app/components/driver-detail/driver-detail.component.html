@@ -13,12 +13,12 @@
       <div class="card-body">
         <div class="d-flex">
           <img class="me-3 rounded-circle"
-               src
-               None="trip.rider!.photo"
-               width="80"
-               height="80" />
+            src
+            None="trip.rider!.photo"
+            width="80"
+            height="80" />
           <div>
-            <h5 class="mt-0 mb-1 fw-bold">{{ trip.rider!.first_name }}</h5>
+            <h5 class="mt-0 mb-1 fw-bold">{{ trip.rider!.name }}</h5>
             <p>
               <strong>{{ trip.pick_up_address }}</strong> to <strong>{{ trip.drop_off_address }}</strong>
               <br />
@@ -30,17 +30,17 @@
       <div class="card-footer" [ngSwitch]="trip.status">
         <div class="d-grid">
           <button class="btn btn-primary"
-                  ngSwitchCase="'REQUESTED'"
-                  click
-                  None="updateTripStatus('STARTED')">Drive to pick up</button>
+            ngSwitchCase="'REQUESTED'"
+            click
+            None="updateTripStatus('STARTED')">Drive to pick up</button>
           <button class="btn btn-primary"
-                  ngSwitchCase="'STARTED'"
-                  click
-                  None="updateTripStatus('IN_PROGRESS')">Drive to drop off</button>
+            ngSwitchCase="'STARTED'"
+            click
+            None="updateTripStatus('IN_PROGRESS')">Drive to drop off</button>
           <button class="btn btn-primary"
-                  ngSwitchCase="'IN_PROGRESS'"
-                  click
-                  None="updateTripStatus('COMPLETED')">Complete trip</button>
+            ngSwitchCase="'IN_PROGRESS'"
+            click
+            None="updateTripStatus('COMPLETED')">Complete trip</button>
         </div>
         <div class="d-grid" *ngSwitchDefault>
           <button class="btn btn-success" disabled>Completed</button>

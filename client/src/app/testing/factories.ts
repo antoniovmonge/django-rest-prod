@@ -6,9 +6,8 @@ import { Trip } from '../services/trip.service';
 export const createFakeUser = (data?: Partial<User>): User => {
   return Object.assign({
     id: faker.datatype.uuid(),
-    username: faker.internet.email(),
-    first_name: faker.name.firstName(),
-    last_name: faker.name.lastName(),
+    email: faker.internet.email(),
+    name: faker.name.firstName(),
     group: 'rider',
     photo: faker.image.imageUrl()
   }, data);

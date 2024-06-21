@@ -19,7 +19,7 @@ export class RiderDashboardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private tripService: TripService
-  ) {}
+  ) { }
 
   get currentTrips(): ReadonlyArray<Trip> {
     return this.trips.filter(trip => {
@@ -50,11 +50,11 @@ export class RiderDashboardComponent implements OnInit, OnDestroy {
 
   updateToast(trip: Trip): void {
     if (trip.status === 'STARTED') {
-      this.toastr.info(`Driver ${trip.driver!.username} is coming to pick you up.`);
+      this.toastr.info(`Driver ${trip.driver!.email} is coming to pick you up.`);
     } else if (trip.status === 'IN_PROGRESS') {
-      this.toastr.info(`Driver ${trip.driver!.username} is headed to your destination.`);
+      this.toastr.info(`Driver ${trip.driver!.email} is headed to your destination.`);
     } else if (trip.status === 'COMPLETED') {
-      this.toastr.info(`Driver ${trip.driver!.username} has dropped you off.`);
+      this.toastr.info(`Driver ${trip.driver!.email} has dropped you off.`);
     }
   }
 

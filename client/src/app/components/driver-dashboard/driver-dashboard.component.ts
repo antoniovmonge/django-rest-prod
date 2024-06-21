@@ -19,7 +19,7 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private toastr: ToastrService,
     private tripService: TripService
-  ) {}
+  ) { }
 
   get currentTrips(): ReadonlyArray<Trip> {
     return this.trips.filter(trip => {
@@ -52,7 +52,7 @@ export class DriverDashboardComponent implements OnInit, OnDestroy {
 
   updateToast(trip: Trip): void {
     if (trip.driver === null) {
-      this.toastr.info(`Rider ${trip.rider!.username} has requested a trip.`);
+      this.toastr.info(`Rider ${trip.rider!.email} has requested a trip.`);
     }
   }
 

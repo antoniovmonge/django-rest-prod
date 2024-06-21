@@ -41,9 +41,8 @@ describe('SignUpComponent', () => {
     const user = createFakeUser();
     const photo = new File(['photo'], user.photo, { type: 'image/jpeg' });
     component.user = {
-      username: user.username,
-      firstName: user.first_name,
-      lastName: user.last_name,
+      email: user.email,
+      name: user.name,
       password: 'pAssw0rd!',
       group: user.group,
       photo
