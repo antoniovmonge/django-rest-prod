@@ -2,13 +2,11 @@ volumes:
   core_local_postgres_data: {}
   core_local_postgres_data_backups: {}
   core_local_redis_data: {}
-  media: {}
-  static: {}
 
 services:
   django: &django
     build:
-      context: ./server
+      context: .
       dockerfile: ./compose/local/django/Dockerfile
     image: core_local_django
     container_name: core_local_django
@@ -17,17 +15,17 @@ services:
       - redis
       - mailpit
     volumes:
-      - ./server:/app:z
+      - .:/app:z
     env_file:
-      - ./server/.envs/.local/.django
-      - ./server/.envs/.local/.postgres
+      - ./.envs/.local/.django
+      - ./.envs/.local/.postgres
     ports:
-      - '8001:8000'
+      - '8000:8000'
     command: /start
 
   postgres:
     build:
-      context: ./server
+      context: .
       dockerfile: ./compose/production/postgres/Dockerfile
     image: core_production_postgres
     container_name: core_local_postgres
@@ -35,7 +33,7 @@ services:
       - core_local_postgres_data:/var/lib/postgresql/data
       - core_local_postgres_data_backups:/backups
     env_file:
-      - ./server/.envs/.local/.postgres
+      - ./.envs/.local/.postgres
 
   mailpit:
     image: docker.io/axllent/mailpit:latest
@@ -49,6 +47,7 @@ services:
 
     volumes:
       - core_local_redis_data:/data
+
 
   celeryworker:
     <<: *django
@@ -79,31 +78,3 @@ services:
     ports:
       - '5555:5555'
     command: /start-flower
-
-  taxi-client:
-    build:
-      context: ./client
-    command: ng serve --host 0.0.0.0
-    container_name: taxi-client
-    depends_on:
-      - django
-    environment:
-      - CHROME_BIN=chromium-browser
-    ports:
-      - 4201:4200
-    volumes:
-      - ./client:/usr/src/app
-
-  nginx:
-    build:
-      context: ./nginx
-    container_name: taxi-nginx
-    depends_on:
-      - django
-      - taxi-client
-    ports:
-      - 8080:80
-    restart: always
-    volumes:
-      - media:/usr/src/app/media
-      - static:/usr/src/app/static

@@ -1,0 +1,66 @@
+<h1>Sign up</h1>
+<a class="btn btn-primary" [routerLink]="['/log-in']">Log in</a>
+<a class="btn btn-primary" [routerLink]="['']">Landing</a>
+<!-- <div class="row">
+  <div class="col">
+    <div class="card">
+      <div class="card-header">Sign up</div>
+      <div class="card-body">
+        <form novalidate (ngSubmit)="onSubmit()" #signUpForm="ngForm">
+          <div class="mb-3">
+            <label class="form-label" for="email">Email:</label>
+            <input id="email"
+              class="form-control"
+              type="text"
+              ngModel
+              None="user.email"
+              name="email"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="name">Name:</label>
+            <input id="name"
+              class="form-control"
+              type="text"
+              ngModel
+              None="user.name"
+              name="name"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="password">Password:</label>
+            <input id="password"
+              class="form-control"
+              type="password"
+              ngModel
+              None="user.password"
+              name="password"
+              required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Group:</label>
+            <select class="form-select" [(ngModel)]="user.group" name="group" required>
+              <option value="rider">Rider</option>
+              <option value="driver">Driver</option>
+            </select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label" for="photo">Photo:</label>
+            <input id="photo"
+              class="form-control"
+              type="file"
+              change
+              None="onChange($event)">
+          </div>
+          <div class="d-grid">
+            <button class="btn btn-primary" type="submit" [disabled]="false">Sign up</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <p class="mt-3 text-center">
+      <span>Already have an account?</span>
+      <a [routerLink]="['/api/log-in/']">Log in!</a>
+    </p>
+  </div>
+</div> -->

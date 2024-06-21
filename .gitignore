@@ -161,6 +161,8 @@ typings/
 
 # Local History for devcontainer
 .devcontainer/bash_history
+server/.devcontainer/bash_history
+
 
 
 
@@ -279,6 +281,9 @@ core/media/
 .env
 .envs/*
 !.envs/.local/
+server/.env
+server/.envs/*
+server/!.envs/.local/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
@@ -444,3 +449,7 @@ cython_debug/
 #.idea/
 
 .python-version
+.ruff_cache
+.ruff_cache/
+
+server/core/media

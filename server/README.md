@@ -1,4 +1,4 @@
-# Taxi / Ride Share Application
+# BACKEND (Taxi / Ride Share Application)
 
 [![Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 
@@ -24,19 +24,11 @@ At the end it will be possible to access both experiences simultaneously in orde
 
 ## Estructure
 
-There are two main directories in the project:
-
-`client` and `server`.
-
-### Backend (Django)
-
-The Django application follows the Django-Cookiecutter structure, with some modifications and additions to bring a better developer experience.
+The project follows the Django-Cookiecutter structure, with some modifications and additions to bring a better developer experience.
 
 The directories `contrib`, `static`, `templates` and the different `apps` are located inside the `core` directory.
 
 ## Stack
-
-### Backend
 
 - Django
 - Django REST Framework
@@ -46,10 +38,6 @@ The directories `contrib`, `static`, `templates` and the different `apps` are lo
 - Docker
 - Docker Compose
 - Pre-commit (Code Quality must be checked before commit)
-
-### Frontend
-
-- Angular
 
 ## Env Files
 
@@ -84,6 +72,13 @@ make users
 Once logged in as an admin, it is possible to access it at <http://127.0.0.1:8000/api/>.
 There it is possible to see the available endpoints and test them.
 
+```json
+{
+    "users": "http://127.0.0.1:8000/api/users/",
+
+}
+```
+
 ### Test tests with pytest and coverage
 
 To run the tests, check your test coverage, and generate an HTML coverage report:
@@ -103,7 +98,3 @@ Mailpit allow us to test the email sending in development environment without se
 Container mailpit will start automatically when you will run all docker containers in development.
 
 With Mailpit running, to view messages that are sent by your application, open your browser and go to `http://127.0.0.1:8025`
-
-## Client Local urls
-
-Landing Page <http://localhost:4201/#/>
