@@ -39,7 +39,7 @@ describe('Authentication using a service', () => {
       expect(user).toBe(userData);
     });
 
-    const request = httpMock.expectOne('/api/sign_up/');
+    const request = httpMock.expectOne('/api/signup/');
     request.flush(userData);
   });
 
@@ -57,7 +57,7 @@ describe('Authentication using a service', () => {
     ).subscribe(user => {
       expect(user).toBe(tokenData);
     });
-    const request = httpMock.expectOne('/api/log_in/');
+    const request = httpMock.expectOne('/api/log-in/');
     request.flush(tokenData);
 
     // Confirm that the expected data was written to local storage.

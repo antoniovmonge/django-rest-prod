@@ -72,7 +72,7 @@ export class AuthService {
     group: string,
     photo: any
   ): Observable<User> {
-    const url = '/api/sign_up/';
+    const url = '/api/signup/';
     const formData = new FormData();
     formData.append('email', email);
     formData.append('name', name);
@@ -84,7 +84,7 @@ export class AuthService {
   }
 
   logIn(email: string, password: string): Observable<Token> {
-    const url = '/api/log_in/';
+    const url = '/api/log-in/';
     return this.http.post<Token>(url, { email, password }).pipe(
       tap(token => localStorage.setItem('taxi.auth', JSON.stringify(token)))
     );
